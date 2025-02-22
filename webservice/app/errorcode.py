@@ -10,3 +10,7 @@ class ErrorCode:
     # 图片不存在
     IMAGE_NOT_EXIST = 303
     IMAGE_NOT_EXIST_MSG = '图片不存在'
+
+    # 房子不存在
+    HOUSE_NOT_EXIST = 304
+    HOUSE_NOT_EXIST_MSG = '房子不存在'

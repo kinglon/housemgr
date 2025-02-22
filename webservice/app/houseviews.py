@@ -10,7 +10,7 @@ from .models import House
 from .utils import *
 from django.utils import timezone
 from datetime import datetime
-from pathutil import PathUtil
+from .pathutil import PathUtil
 
 
 logger = logging.getLogger('house')
@@ -87,7 +87,7 @@ def handle_house(request, house_id):
 
 def delete_house(_, house_id):
     try:
-        house = House.objects.get(house_id)
+        house = House.objects.get(house_id=house_id)
         house.delete()
         return JsonResponse(make_response_body())
     except Exception as e:
@@ -103,7 +103,12 @@ def update_house(request, house_id):
         if data_dict is None:
             return response
 
-        House.objects.filter(house_id=house_id).update(**data_dict)
+        house = House.objects.filter(house_id=house_id)
+        if not house.exists():
+            body = make_response_body(code=ErrorCode.HOUSE_NOT_EXIST, msg=ErrorCode.HOUSE_NOT_EXIST_MSG)
+            return JsonResponse(body)
+
+        house.update(**data_dict)
         return JsonResponse(make_response_body())
     except Exception as e:
         logger.error("updating house have an error: {}".format(e))
@@ -148,7 +153,12 @@ def list_house(request):
             house_obj = model_to_dict(house)
             # 将图片字符串转成数组
             for image_key in g_image_keys:
-                house_obj[image_key] = json.loads(house_obj[image_key])
+                if len(house_obj[image_key]) > 0:
+                    house_obj[image_key] = json.loads(house_obj[image_key])
+                else:
+                    house_obj[image_key] = []
+            # 交易日期转换为utc时间戳
+            house_obj['jiaoyi_at'] = int(house.jiaoyi_at.timestamp())
             data_list.append(house_obj)
         response_body = make_response_body(data=make_response_data_list(total_count, data_list))
         return JsonResponse(response_body)

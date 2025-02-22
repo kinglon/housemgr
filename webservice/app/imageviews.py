@@ -2,9 +2,9 @@ import logging
 import os.path
 import uuid
 
-from django.http import JsonResponse, HttpResponseServerError, HttpResponse, FileResponse
-
-from pathutil import PathUtil
+from django.http import JsonResponse, HttpResponseServerError, FileResponse
+from .errorcode import ErrorCode
+from .pathutil import PathUtil
 from .utils import *
 
 logger = logging.getLogger('image')
@@ -38,7 +38,8 @@ def get_image(_, image_id):
         file_path = os.path.join(g_image_path, image_id)
         if not os.path.exists(file_path):
             logger.error("the image of {} not found".format(image_id))
-            return HttpResponse("图片不存在", status=404)
+            return JsonResponse(make_response_body(code=ErrorCode.IMAGE_NOT_EXIST,
+                                                   msg=ErrorCode.IMAGE_NOT_EXIST_MSG))
 
         return FileResponse(open(file_path, 'rb'))
     except Exception as e:

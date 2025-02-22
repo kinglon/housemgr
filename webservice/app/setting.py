@@ -12,7 +12,7 @@ class Setting:
         current_file_path = os.path.dirname(os.path.abspath(__file__))
 
         # 加载设置
-        config_file_path = os.path.join(current_file_path, r'configs\configs.txt')
+        config_file_path = os.path.join(current_file_path, r'..\configs\configs.txt')
         with open(config_file_path, 'r', encoding='utf-8') as file:
             for line in file:
                 # Remove newline characters and process each line
@@ -25,5 +25,5 @@ class Setting:
                     continue
                 key = parts[0].strip()
                 value = parts[1].strip()
-                if key == 'data根目录':
+                if key == 'data_path':
                     self.data_path = value

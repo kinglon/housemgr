@@ -1,6 +1,6 @@
 import os
 
-from setting import Setting
+from .setting import Setting
 
 g_data_path = Setting().data_path
 
