@@ -1,0 +1,2 @@
+# data根目录
+data_path=E:\yejinlong\MyProject\c++\housemgr\webservice\data
