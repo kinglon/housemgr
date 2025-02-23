@@ -115,11 +115,12 @@ void MainWindow::updateHouseTableView()
     }
 
     ui->lastPageButton->setEnabled(m_searchCondition.m_page>1);
-    ui->nextPageButton->setEnabled(m_searchCondition.m_page < m_searchResult.totalPage);
+    ui->nextPageButton->setEnabled(m_searchCondition.m_page < m_searchResult.m_total);
     if (m_searchResult.m_houses.size() > 0)
     {
+        int totalPage = m_searchResult.getTotalPage(m_searchCondition.m_pageSize);
         QString pageNumber = QString("%1/%2").arg(QString::number(m_searchCondition.m_page),
-                                                  QString::number(m_searchResult.totalPage));
+                                                  QString::number(totalPage));
         ui->pageNumberLabel->setText(pageNumber);
         ui->pageNumberLabel->setVisible(true);
     }
@@ -234,7 +235,8 @@ void MainWindow::onNextPageButton()
 {
     SearchCondition searchCondition = m_searchCondition;
     searchCondition.m_page++;
-    if (searchCondition.m_page > m_searchResult.totalPage)
+    int totalPage = m_searchResult.getTotalPage(m_searchCondition.m_pageSize);
+    if (searchCondition.m_page > totalPage)
     {
         return;
     }

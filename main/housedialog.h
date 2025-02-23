@@ -42,10 +42,12 @@ private:
 
     void downloadImages();
 
-private:
+private slots:
     void onAddImageButton(QListWidget* listWidget);
 
     void onOkButton();
+
+    void onImageItemClick(QListWidgetItem *item);
 
 protected:
     bool eventFilter(QObject *obj, QEvent *event) override;

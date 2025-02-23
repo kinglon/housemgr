@@ -11,6 +11,7 @@
 #include <QFileDialog>
 #include "uploadimagecontroller.h"
 #include "downloadimagecontroller.h"
+#include "imagedialog.h"
 
 HouseDialog::HouseDialog(QWidget *parent) :
     QDialog(parent),
@@ -151,6 +152,7 @@ void HouseDialog::initActions()
     for (auto& listWidget : m_imageListWidgets)
     {
         listWidget->installEventFilter(this);
+        connect(listWidget, &QListWidget::itemClicked, this, &HouseDialog::onImageItemClick);
     }
 
     connect(ui->addFangChanZhengButton, &QPushButton::click, [this]() {
@@ -208,6 +210,14 @@ void HouseDialog::setHouse(const House& house)
 {
     m_house = house;
     initCtrls();
+}
+
+void HouseDialog::onImageItemClick(QListWidgetItem *item)
+{
+    QString imageId = item->data(Qt::UserRole).toString();
+    ImageDialog dialog(this, imageId);
+    dialog.show();
+    dialog.exec();
 }
 
 void HouseDialog::onOkButton()

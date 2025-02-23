@@ -1,4 +1,4 @@
-QT       += core gui
+QT       += core gui network
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -18,6 +18,8 @@ SOURCES += \
     downloadimagecontroller.cpp \
     housedialog.cpp \
     househttpclient.cpp \
+    httpclientbase.cpp \
+    imagedialog.cpp \
     main.cpp \
     mainwindow.cpp \
     myprogressdialog.cpp \
@@ -38,6 +40,8 @@ HEADERS += \
     downloadimagecontroller.h \
     housedialog.h \
     househttpclient.h \
+    httpclientbase.h \
+    imagedialog.h \
     mainwindow.h \
     myprogressdialog.h \
     pathutil.h \
@@ -47,6 +51,7 @@ HEADERS += \
 
 FORMS += \
     housedialog.ui \
+    imagedialog.ui \
     mainwindow.ui
 
 # Enable PDB generation
