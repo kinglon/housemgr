@@ -35,8 +35,7 @@ HouseDialog::HouseDialog(QWidget *parent) :
     m_imageListWidgets.append(ui->sellerMarriageListWidget);
 
     initCtrls();
-    initActions();
-    downloadImages();
+    initActions();    
 }
 
 HouseDialog::~HouseDialog()
@@ -155,47 +154,47 @@ void HouseDialog::initActions()
         connect(listWidget, &QListWidget::itemClicked, this, &HouseDialog::onImageItemClick);
     }
 
-    connect(ui->addFangChanZhengButton, &QPushButton::click, [this]() {
+    connect(ui->addFangChanZhengButton, &QPushButton::clicked, [this]() {
         onAddImageButton(ui->fangChanZhengListWidget);
     });
 
-    connect(ui->addShuiPiaoButton, &QPushButton::click, [this]() {
+    connect(ui->addShuiPiaoButton, &QPushButton::clicked, [this]() {
         onAddImageButton(ui->shuiPiaoListWidget);
     });
 
-    connect(ui->addTongZhiShuButton, &QPushButton::click, [this]() {
+    connect(ui->addTongZhiShuButton, &QPushButton::clicked, [this]() {
         onAddImageButton(ui->tongZhiShuListWidget);
     });
 
-    connect(ui->addBuyerHuKouButton, &QPushButton::click, [this]() {
+    connect(ui->addBuyerHuKouButton, &QPushButton::clicked, [this]() {
         onAddImageButton(ui->buyerHuKouListWidget);
     });
 
-    connect(ui->addBuyerIdButton, &QPushButton::click, [this]() {
+    connect(ui->addBuyerIdButton, &QPushButton::clicked, [this]() {
         onAddImageButton(ui->buyerIdListWidget);
     });
 
-    connect(ui->addBuyerMarriageButton, &QPushButton::click, [this]() {
+    connect(ui->addBuyerMarriageButton, &QPushButton::clicked, [this]() {
         onAddImageButton(ui->buyerMarriageListWidget);
     });
 
-    connect(ui->addSellerHuKouButton, &QPushButton::click, [this]() {
+    connect(ui->addSellerHuKouButton, &QPushButton::clicked, [this]() {
         onAddImageButton(ui->sellerHuKouListWidget);
     });
 
-    connect(ui->addSellerIdButton, &QPushButton::click, [this]() {
+    connect(ui->addSellerIdButton, &QPushButton::clicked, [this]() {
         onAddImageButton(ui->sellerIdListWidget);
     });
 
-    connect(ui->addSellerMarriageButton, &QPushButton::click, [this]() {
+    connect(ui->addSellerMarriageButton, &QPushButton::clicked, [this]() {
         onAddImageButton(ui->sellerMarriageListWidget);
     });
 
-    connect(ui->cancelButton, &QPushButton::click, [this]() {
+    connect(ui->cancelButton, &QPushButton::clicked, [this]() {
         close();
     });
 
-    connect(ui->okButton, &QPushButton::click, [this]() {
+    connect(ui->okButton, &QPushButton::clicked, [this]() {
         onOkButton();
     });
 }
@@ -210,6 +209,7 @@ void HouseDialog::setHouse(const House& house)
 {
     m_house = house;
     initCtrls();
+    downloadImages();
 }
 
 void HouseDialog::onImageItemClick(QListWidgetItem *item)
@@ -229,6 +229,7 @@ void HouseDialog::onOkButton()
     }
 
     House house;
+    house.m_houseId = m_house.m_houseId;
     house.m_name = ui->houseNameEdit->text();
     house.m_jiaoShuiName = ui->jiaoShuiEdit->text();
     house.m_zhongjieName = ui->zhongJieEdit->text();
@@ -310,8 +311,7 @@ void HouseDialog::onOkButton()
                 UiUtil::showTip(QString::fromWCharArray(L"新增房子成功"));
                 m_house = house;
                 m_house.m_houseId = houseId;
-                setResult(QDialog::Accepted);
-                close();
+                done(Accepted);
                 return;
             }
 
@@ -333,8 +333,7 @@ void HouseDialog::onOkButton()
             {
                 UiUtil::showTip(QString::fromWCharArray(L"更新房子成功"));
                 m_house = house;
-                setResult(QDialog::Accepted);
-                close();
+                done(Accepted);
                 return;
             }
 
@@ -402,7 +401,17 @@ bool HouseDialog::eventFilter(QObject *obj, QEvent *event)
                 QAction * action = menu.exec(cursor().pos());
                 if (action && action->text() == QString::fromWCharArray(L"删除"))
                 {
-                    listWidget->removeItemWidget(item);
+                    if (UiUtil::showTipV2(QString::fromWCharArray(L"确定删除？")))
+                    {
+                        for (int i=0; i<listWidget->count(); i++)
+                        {
+                            if (listWidget->item(i) == item)
+                            {
+                                delete listWidget->takeItem(i);
+                                break;
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -415,7 +424,7 @@ void HouseDialog::onAddImageButton(QListWidget* listWidget)
 {
     QFileDialog fileDialog;
     fileDialog.setWindowTitle(QString::fromWCharArray(L"选择图片"));
-    fileDialog.setNameFilters(QStringList() << "image files (*.jpg|*.jpeg|*.png|*.bmp)");
+    fileDialog.setNameFilters(QStringList() << "Images (*.png *.jpg *.jpeg *.bmp)");
     if (fileDialog.exec() != QDialog::Accepted)
     {
         return;
@@ -471,7 +480,7 @@ void HouseDialog::downloadImages()
                 if (listWidget->item(i)->data(Qt::UserRole) == imageId)
                 {
                     found = true;
-                    listWidget->removeItemWidget(listWidget->item(i));
+                    delete listWidget->takeItem(i);
                     addImageCtrlItem(listWidget, imageId, i);
                     break;
                 }

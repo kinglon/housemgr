@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1115</width>
+    <width>1473</width>
     <height>635</height>
    </rect>
   </property>
@@ -19,7 +19,7 @@
      <rect>
       <x>10</x>
       <y>10</y>
-      <width>1091</width>
+      <width>1451</width>
       <height>611</height>
      </rect>
     </property>
@@ -91,13 +91,13 @@
         <widget class="QLineEdit" name="buyerName">
          <property name="minimumSize">
           <size>
-           <width>80</width>
+           <width>0</width>
            <height>0</height>
           </size>
          </property>
          <property name="maximumSize">
           <size>
-           <width>80</width>
+           <width>16777215</width>
            <height>16777215</height>
           </size>
          </property>
@@ -117,13 +117,13 @@
         <widget class="QLineEdit" name="buyerPhoneEdit">
          <property name="minimumSize">
           <size>
-           <width>100</width>
+           <width>0</width>
            <height>0</height>
           </size>
          </property>
          <property name="maximumSize">
           <size>
-           <width>100</width>
+           <width>16777215</width>
            <height>16777215</height>
           </size>
          </property>
@@ -143,13 +143,13 @@
         <widget class="QLineEdit" name="buyerIdEdit">
          <property name="minimumSize">
           <size>
-           <width>160</width>
+           <width>0</width>
            <height>0</height>
           </size>
          </property>
          <property name="maximumSize">
           <size>
-           <width>160</width>
+           <width>16777215</width>
            <height>16777215</height>
           </size>
          </property>
@@ -169,13 +169,13 @@
         <widget class="QLineEdit" name="sellerNameEdit">
          <property name="minimumSize">
           <size>
-           <width>80</width>
+           <width>0</width>
            <height>0</height>
           </size>
          </property>
          <property name="maximumSize">
           <size>
-           <width>80</width>
+           <width>16777215</width>
            <height>16777215</height>
           </size>
          </property>
@@ -192,13 +192,13 @@
         <widget class="QLineEdit" name="sellerPhoneEdit">
          <property name="minimumSize">
           <size>
-           <width>100</width>
+           <width>0</width>
            <height>0</height>
           </size>
          </property>
          <property name="maximumSize">
           <size>
-           <width>100</width>
+           <width>16777215</width>
            <height>16777215</height>
           </size>
          </property>
@@ -215,13 +215,13 @@
         <widget class="QLineEdit" name="sellerIdEdit">
          <property name="minimumSize">
           <size>
-           <width>160</width>
+           <width>0</width>
            <height>0</height>
           </size>
          </property>
          <property name="maximumSize">
           <size>
-           <width>160</width>
+           <width>16777215</width>
            <height>16777215</height>
           </size>
          </property>
@@ -277,7 +277,26 @@
       </layout>
      </item>
      <item>
-      <widget class="QTableView" name="houseTableView"/>
+      <widget class="QTableView" name="houseTableView">
+       <property name="editTriggers">
+        <set>QAbstractItemView::NoEditTriggers</set>
+       </property>
+       <property name="selectionBehavior">
+        <enum>QAbstractItemView::SelectRows</enum>
+       </property>
+       <attribute name="horizontalHeaderVisible">
+        <bool>true</bool>
+       </attribute>
+       <attribute name="horizontalHeaderHighlightSections">
+        <bool>false</bool>
+       </attribute>
+       <attribute name="verticalHeaderVisible">
+        <bool>false</bool>
+       </attribute>
+       <attribute name="verticalHeaderHighlightSections">
+        <bool>false</bool>
+       </attribute>
+      </widget>
      </item>
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout_5">

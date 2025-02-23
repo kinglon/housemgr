@@ -26,7 +26,7 @@ HouseHttpClient::HouseHttpClient(QObject *parent)
 void HouseHttpClient::queryHouse(const SearchCondition& condition)
 {
     QNetworkRequest request;
-    QString urlString = SettingManager::getInstance()->m_host + "/house/list?" + getQueryHouseParam(condition);
+    QString urlString = SettingManager::getInstance()->m_host + "/app/house/list?" + getQueryHouseParam(condition);
     QUrl url(urlString);
     request.setUrl(url);
     addCommonHeader(request);    
@@ -41,11 +41,11 @@ void HouseHttpClient::queryHouse(const SearchCondition& condition)
 void HouseHttpClient::deleteHouse(int houseId)
 {
     QNetworkRequest request;
-    QString urlString = SettingManager::getInstance()->m_host + "/house/" + QString::number(houseId);
+    QString urlString = SettingManager::getInstance()->m_host + "/app/house/" + QString::number(houseId);
     QUrl url(urlString);
     request.setUrl(url);
     addCommonHeader(request);
-    QNetworkReply* reply = m_networkAccessManager->post(request, QByteArray());
+    QNetworkReply* reply = m_networkAccessManager->deleteResource(request);
     if (reply)
     {
         qInfo("send the request of deleting house: %d", houseId);
@@ -56,7 +56,7 @@ void HouseHttpClient::deleteHouse(int houseId)
 void HouseHttpClient::addHouse(const House& house)
 {
     QNetworkRequest request;
-    QString urlString = SettingManager::getInstance()->m_host + "/house";
+    QString urlString = SettingManager::getInstance()->m_host + "/app/house";
     QUrl url(urlString);
     request.setUrl(url);
     addCommonHeader(request);
@@ -72,12 +72,13 @@ void HouseHttpClient::addHouse(const House& house)
 void HouseHttpClient::updateHouse(const House& house)
 {
     QNetworkRequest request;
-    QString urlString = SettingManager::getInstance()->m_host + "/house/" + house.m_houseId;
+    QString urlString = SettingManager::getInstance()->m_host + "/app/house/"
+            + QString::number(house.m_houseId);
     QUrl url(urlString);
     request.setUrl(url);
     addCommonHeader(request);
     QJsonObject body = getAddHouseBody(house);
-    QNetworkReply* reply = m_networkAccessManager->post(request, QJsonDocument(body).toJson());
+    QNetworkReply* reply = m_networkAccessManager->put(request, QJsonDocument(body).toJson());
     if (reply)
     {
         qInfo("send the request of updating house");
@@ -107,7 +108,8 @@ void HouseHttpClient::addImage(const QString& imageFilePath)
     QString urlString = SettingManager::getInstance()->m_host + "/app/image";
     QUrl url(urlString);
     request.setUrl(url);
-    addCommonHeader(request);
+    // 发送multipart请求会自动设置content type包括boundary，不要自己设置
+    // addCommonHeader(request);
 
     QNetworkReply* reply = m_networkAccessManager->post(request, multiPart);
     if (reply)
@@ -306,7 +308,7 @@ void HouseHttpClient::processGetImageResponse(QNetworkReply *reply)
     }
 
     QFile file(imageFilePath);
-    if (!file.open(QFile::ReadOnly))
+    if (!file.open(QFile::WriteOnly|QFile::NewOnly))
     {
         qCritical("failed to open the image save path: %s", imageFilePath.toStdString().c_str());
         emit getImageCompletely(false);
@@ -484,6 +486,8 @@ bool HouseHttpClient::parseQueryHouseData(const QJsonObject& data, SearchResult&
         {
             house.m_seller.m_marriageImages.append(images[i].toString());
         }
+
+        result.m_houses.append(house);
     }
 
     return true;

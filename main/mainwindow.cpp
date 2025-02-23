@@ -47,6 +47,7 @@ void MainWindow::initHouseTableView()
     m_houseViewModel.clear();
     m_houseViewModel.setColumnCount(11);
     m_houseViewModel.setHeaderData(0, Qt::Horizontal, QString::fromWCharArray(L"房子名称"));
+    ui->houseTableView->setColumnWidth(0, 200);
     m_houseViewModel.setHeaderData(1, Qt::Horizontal, QString::fromWCharArray(L"缴税人"));
     m_houseViewModel.setHeaderData(2, Qt::Horizontal, QString::fromWCharArray(L"中介人"));
     m_houseViewModel.setHeaderData(3, Qt::Horizontal, QString::fromWCharArray(L"交易日期"));
@@ -54,9 +55,11 @@ void MainWindow::initHouseTableView()
     m_houseViewModel.setHeaderData(5, Qt::Horizontal, QString::fromWCharArray(L"买家姓名"));
     m_houseViewModel.setHeaderData(6, Qt::Horizontal, QString::fromWCharArray(L"买家电话"));
     m_houseViewModel.setHeaderData(7, Qt::Horizontal, QString::fromWCharArray(L"买家身份证"));
+    ui->houseTableView->setColumnWidth(7, 200);
     m_houseViewModel.setHeaderData(8, Qt::Horizontal, QString::fromWCharArray(L"卖家姓名"));
     m_houseViewModel.setHeaderData(9, Qt::Horizontal, QString::fromWCharArray(L"卖家电话"));
     m_houseViewModel.setHeaderData(10, Qt::Horizontal, QString::fromWCharArray(L"卖家身份证"));
+    ui->houseTableView->setColumnWidth(10, 200);
 
     updateHouseTableView();
 }
@@ -167,10 +170,15 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *event)
 
 void MainWindow::onAddButton()
 {
-    HouseDialog dialog;
+    HouseDialog dialog(this);
     dialog.setType(HouseDialog::ADD);
     dialog.show();
-    dialog.exec();
+    if (dialog.exec() != QDialog::Accepted)
+    {
+        return;
+    }
+
+    doSearch(m_searchCondition);
 }
 
 void MainWindow::doSearch(const SearchCondition& searchCondition)
@@ -266,7 +274,7 @@ void MainWindow::onEditHouseTableView(int row)
         return;
     }
 
-    HouseDialog dialog;
+    HouseDialog dialog(this);
     dialog.setType(HouseDialog::EDIT);
     dialog.setHouse(house);
     dialog.show();
@@ -280,9 +288,14 @@ void MainWindow::onEditHouseTableView(int row)
 
 void MainWindow::onDeleteHouseTableView(int row)
 {
+    if (!UiUtil::showTipV2(QString::fromWCharArray(L"确定删除？")))
+    {
+        return;
+    }
+
     int houseId = m_houseViewModel.data(m_houseViewModel.index(row, 0), Qt::UserRole).toInt();
     HouseHttpClient* client = new HouseHttpClient(this);
-    connect(client, &HouseHttpClient::queryHouseCompletely,
+    connect(client, &HouseHttpClient::deleteHouseCompletely,
             [this, client](bool success) {
         if (!success)
         {
@@ -305,7 +318,7 @@ void MainWindow::onBrowseTableView(int row)
         return;
     }
 
-    HouseDialog dialog;
+    HouseDialog dialog(this);
     dialog.setType(HouseDialog::BROWSE);
     dialog.setHouse(house);
     dialog.show();

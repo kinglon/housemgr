@@ -330,6 +330,21 @@
           <height>50</height>
          </size>
         </property>
+        <property name="autoScroll">
+         <bool>false</bool>
+        </property>
+        <property name="spacing">
+         <number>2</number>
+        </property>
+        <property name="gridSize">
+         <size>
+          <width>45</width>
+          <height>45</height>
+         </size>
+        </property>
+        <property name="viewMode">
+         <enum>QListView::IconMode</enum>
+        </property>
        </widget>
       </item>
      </layout>
@@ -396,6 +411,21 @@
           <width>16777215</width>
           <height>50</height>
          </size>
+        </property>
+        <property name="autoScroll">
+         <bool>false</bool>
+        </property>
+        <property name="spacing">
+         <number>2</number>
+        </property>
+        <property name="gridSize">
+         <size>
+          <width>45</width>
+          <height>45</height>
+         </size>
+        </property>
+        <property name="viewMode">
+         <enum>QListView::IconMode</enum>
         </property>
        </widget>
       </item>
@@ -464,6 +494,21 @@
           <height>50</height>
          </size>
         </property>
+        <property name="autoScroll">
+         <bool>false</bool>
+        </property>
+        <property name="spacing">
+         <number>2</number>
+        </property>
+        <property name="gridSize">
+         <size>
+          <width>45</width>
+          <height>45</height>
+         </size>
+        </property>
+        <property name="viewMode">
+         <enum>QListView::IconMode</enum>
+        </property>
        </widget>
       </item>
      </layout>
@@ -530,6 +575,21 @@
           <width>16777215</width>
           <height>50</height>
          </size>
+        </property>
+        <property name="autoScroll">
+         <bool>false</bool>
+        </property>
+        <property name="spacing">
+         <number>2</number>
+        </property>
+        <property name="gridSize">
+         <size>
+          <width>45</width>
+          <height>45</height>
+         </size>
+        </property>
+        <property name="viewMode">
+         <enum>QListView::IconMode</enum>
         </property>
        </widget>
       </item>
@@ -598,6 +658,21 @@
           <height>50</height>
          </size>
         </property>
+        <property name="autoScroll">
+         <bool>false</bool>
+        </property>
+        <property name="spacing">
+         <number>2</number>
+        </property>
+        <property name="gridSize">
+         <size>
+          <width>45</width>
+          <height>45</height>
+         </size>
+        </property>
+        <property name="viewMode">
+         <enum>QListView::IconMode</enum>
+        </property>
        </widget>
       </item>
      </layout>
@@ -664,6 +739,21 @@
           <width>16777215</width>
           <height>50</height>
          </size>
+        </property>
+        <property name="autoScroll">
+         <bool>false</bool>
+        </property>
+        <property name="spacing">
+         <number>2</number>
+        </property>
+        <property name="gridSize">
+         <size>
+          <width>45</width>
+          <height>45</height>
+         </size>
+        </property>
+        <property name="viewMode">
+         <enum>QListView::IconMode</enum>
         </property>
        </widget>
       </item>
@@ -732,6 +822,21 @@
           <height>50</height>
          </size>
         </property>
+        <property name="autoScroll">
+         <bool>false</bool>
+        </property>
+        <property name="spacing">
+         <number>2</number>
+        </property>
+        <property name="gridSize">
+         <size>
+          <width>45</width>
+          <height>45</height>
+         </size>
+        </property>
+        <property name="viewMode">
+         <enum>QListView::IconMode</enum>
+        </property>
        </widget>
       </item>
      </layout>
@@ -798,6 +903,21 @@
           <width>16777215</width>
           <height>50</height>
          </size>
+        </property>
+        <property name="autoScroll">
+         <bool>false</bool>
+        </property>
+        <property name="spacing">
+         <number>2</number>
+        </property>
+        <property name="gridSize">
+         <size>
+          <width>45</width>
+          <height>45</height>
+         </size>
+        </property>
+        <property name="viewMode">
+         <enum>QListView::IconMode</enum>
         </property>
        </widget>
       </item>
@@ -868,6 +988,21 @@
           <width>16777215</width>
           <height>50</height>
          </size>
+        </property>
+        <property name="autoScroll">
+         <bool>false</bool>
+        </property>
+        <property name="spacing">
+         <number>2</number>
+        </property>
+        <property name="gridSize">
+         <size>
+          <width>45</width>
+          <height>45</height>
+         </size>
+        </property>
+        <property name="viewMode">
+         <enum>QListView::IconMode</enum>
         </property>
        </widget>
       </item>

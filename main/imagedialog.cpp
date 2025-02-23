@@ -8,10 +8,11 @@ ImageDialog::ImageDialog(QWidget *parent, QString imageId) :
 {
     ui->setupUi(this);
 
-    setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint);
+    setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint | Qt::WindowMaximizeButtonHint);
     setWindowModality(Qt::WindowModal);
 
     m_imageLabel = new QLabel(this);
+    m_imageLabel->setAlignment(Qt::AlignCenter);
 
     m_originalPixmap.load(PathUtil::getImageFilePath(imageId));
     updateImageSize(); // 初始化图片大小
@@ -28,6 +29,8 @@ void ImageDialog::updateImageSize()
     {
         // 获取客户区大小（不包含标题栏）
         QSize clientSize = contentsRect().size();
+
+        m_imageLabel->setFixedSize(clientSize);
 
         // 缩放图片以适应客户区大小，同时保持比例
         m_imageLabel->setPixmap(m_originalPixmap.scaled(clientSize, Qt::KeepAspectRatio, Qt::SmoothTransformation));
