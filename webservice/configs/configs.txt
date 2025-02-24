@@ -1,2 +1,9 @@
 # data根目录
 data_path=E:\yejinlong\MyProject\c++\housemgr\webservice\data
+
+# 备份根目录
+backup_path=E:\yejinlong\MyProject\c++\housemgr\webservice\backup
+
+# 数据库配置
+database_user=admin
+database_password=123456

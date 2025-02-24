@@ -58,6 +58,7 @@ ds
 package
 package2
 data
+backup
 doc/*
 !doc/flowgraph.json
 *.bat
