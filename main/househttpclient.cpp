@@ -60,7 +60,7 @@ void HouseHttpClient::addHouse(const House& house)
     QUrl url(urlString);
     request.setUrl(url);
     addCommonHeader(request);
-    QJsonObject body = getAddHouseBody(house);
+    QJsonObject body = getHouseBody(house);
     QNetworkReply* reply = m_networkAccessManager->post(request, QJsonDocument(body).toJson());
     if (reply)
     {
@@ -77,7 +77,7 @@ void HouseHttpClient::updateHouse(const House& house)
     QUrl url(urlString);
     request.setUrl(url);
     addCommonHeader(request);
-    QJsonObject body = getAddHouseBody(house);
+    QJsonObject body = getHouseBody(house);
     QNetworkReply* reply = m_networkAccessManager->put(request, QJsonDocument(body).toJson());
     if (reply)
     {
@@ -493,7 +493,7 @@ bool HouseHttpClient::parseQueryHouseData(const QJsonObject& data, SearchResult&
     return true;
 }
 
-QJsonObject HouseHttpClient::getAddHouseBody(const House& house)
+QJsonObject HouseHttpClient::getHouseBody(const House& house)
 {
     QJsonObject body;
     body["house_name"] = house.m_name;

@@ -52,13 +52,13 @@ void MainWindow::initHouseTableView()
     m_houseViewModel.setHeaderData(2, Qt::Horizontal, QString::fromWCharArray(L"中介人"));
     m_houseViewModel.setHeaderData(3, Qt::Horizontal, QString::fromWCharArray(L"交易日期"));
     m_houseViewModel.setHeaderData(4, Qt::Horizontal, QString::fromWCharArray(L"费用"));
-    m_houseViewModel.setHeaderData(5, Qt::Horizontal, QString::fromWCharArray(L"买家姓名"));
-    m_houseViewModel.setHeaderData(6, Qt::Horizontal, QString::fromWCharArray(L"买家电话"));
-    m_houseViewModel.setHeaderData(7, Qt::Horizontal, QString::fromWCharArray(L"买家身份证"));
+    m_houseViewModel.setHeaderData(5, Qt::Horizontal, QString::fromWCharArray(L"买方姓名"));
+    m_houseViewModel.setHeaderData(6, Qt::Horizontal, QString::fromWCharArray(L"买方电话"));
+    m_houseViewModel.setHeaderData(7, Qt::Horizontal, QString::fromWCharArray(L"买方身份证"));
     ui->houseTableView->setColumnWidth(7, 200);
-    m_houseViewModel.setHeaderData(8, Qt::Horizontal, QString::fromWCharArray(L"卖家姓名"));
-    m_houseViewModel.setHeaderData(9, Qt::Horizontal, QString::fromWCharArray(L"卖家电话"));
-    m_houseViewModel.setHeaderData(10, Qt::Horizontal, QString::fromWCharArray(L"卖家身份证"));
+    m_houseViewModel.setHeaderData(8, Qt::Horizontal, QString::fromWCharArray(L"卖方姓名"));
+    m_houseViewModel.setHeaderData(9, Qt::Horizontal, QString::fromWCharArray(L"卖方电话"));
+    m_houseViewModel.setHeaderData(10, Qt::Horizontal, QString::fromWCharArray(L"卖方身份证"));
     ui->houseTableView->setColumnWidth(10, 200);
 
     updateHouseTableView();
@@ -118,7 +118,7 @@ void MainWindow::updateHouseTableView()
     }
 
     ui->lastPageButton->setEnabled(m_searchCondition.m_page>1);
-    ui->nextPageButton->setEnabled(m_searchCondition.m_page < m_searchResult.m_total);
+    ui->nextPageButton->setEnabled(m_searchCondition.m_page < m_searchResult.getTotalPage(m_searchCondition.m_pageSize));
     if (m_searchResult.m_houses.size() > 0)
     {
         int totalPage = m_searchResult.getTotalPage(m_searchCondition.m_pageSize);
@@ -206,7 +206,7 @@ void MainWindow::onSearchButton()
     if (searchCondition.m_enableJiaoYiDate)
     {
         searchCondition.m_searchJiaoYiBeginDate = ui->jiaoYiBeginDate->date();
-        searchCondition.m_searchJiaoYiEndDate = ui->jiaoYiEndDate->date().addDays(1);
+        searchCondition.m_searchJiaoYiEndDate = ui->jiaoYiEndDate->date();
         if (searchCondition.m_searchJiaoYiBeginDate >= searchCondition.m_searchJiaoYiEndDate)
         {
             UiUtil::showTip(QString::fromWCharArray(L"请正确设置交易日期"));

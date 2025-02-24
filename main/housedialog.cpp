@@ -281,19 +281,19 @@ void HouseDialog::onOkButton()
     for (int i=0; i<ui->sellerHuKouListWidget->count(); i++)
     {
         QString imageId = ui->sellerHuKouListWidget->item(i)->data(Qt::UserRole).toString();
-        house.m_buyer.m_hukouImages.append(imageId);
+        house.m_seller.m_hukouImages.append(imageId);
     }
 
     for (int i=0; i<ui->sellerIdListWidget->count(); i++)
     {
         QString imageId = ui->sellerIdListWidget->item(i)->data(Qt::UserRole).toString();
-        house.m_buyer.m_idImages.append(imageId);
+        house.m_seller.m_idImages.append(imageId);
     }
 
     for (int i=0; i<ui->sellerMarriageListWidget->count(); i++)
     {
         QString imageId = ui->sellerMarriageListWidget->item(i)->data(Qt::UserRole).toString();
-        house.m_buyer.m_marriageImages.append(imageId);
+        house.m_seller.m_marriageImages.append(imageId);
     }
 
     if (m_type == ADD)

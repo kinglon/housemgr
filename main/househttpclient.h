@@ -21,7 +21,7 @@ public:
     int m_page = 1;
 
     // 每页显示个数
-    int m_pageSize = 30;
+    int m_pageSize = 15;
 };
 
 class SearchResult
@@ -89,7 +89,7 @@ private:
 
     QString getQueryHouseParam(const SearchCondition& condition);
     bool parseQueryHouseData(const QJsonObject& data, SearchResult& result);
-    QJsonObject getAddHouseBody(const House& house);
+    QJsonObject getHouseBody(const House& house);
 
 private:
     // reply -> interface type
