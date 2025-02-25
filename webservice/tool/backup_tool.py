@@ -85,12 +85,13 @@ def main():
             time.sleep(60)
             continue
 
-        try:
-            print('开始备份图片')
-            backup_images()
-            print('备份图片完成')
-        except Exception as e:
-            print('备份图片遇到问题：{}'.format(e))
+        if False:
+            try:
+                print('开始备份图片')
+                backup_images()
+                print('备份图片完成')
+            except Exception as e:
+                print('备份图片遇到问题：{}'.format(e))
 
         try:
             print('开始备份数据库')
