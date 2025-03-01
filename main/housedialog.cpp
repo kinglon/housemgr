@@ -220,6 +220,63 @@ void HouseDialog::onImageItemClick(QListWidgetItem *item)
     dialog.exec();
 }
 
+void HouseDialog::onImageItemRightClick(QListWidgetItem *item)
+{
+    QMenu menu;
+    menu.addAction(QString::fromWCharArray(L"删除"));
+    QString imageId = item->data(Qt::UserRole).toString();
+    QString imageFilePath = PathUtil::getImageFilePath(imageId);
+    if (QFile(imageFilePath).exists())
+    {
+        menu.addAction(QString::fromWCharArray(L"保存"));
+    }
+
+    QAction * action = menu.exec(cursor().pos());
+    if (action && action->text() == QString::fromWCharArray(L"删除"))
+    {
+        if (UiUtil::showTipV2(QString::fromWCharArray(L"确定删除？")))
+        {
+            for (int i=0; i<item->listWidget()->count(); i++)
+            {
+                if (item->listWidget()->item(i) == item)
+                {
+                    delete item->listWidget()->takeItem(i);
+                    break;
+                }
+            }
+        }
+    }
+    else if (action && action->text() == QString::fromWCharArray(L"保存"))
+    {
+        QString filePath = QFileDialog::getSaveFileName(this,
+                                                        QString::fromWCharArray(L"保存图片"),
+                                                        "", "JPEG Images (*.jpg *.jpeg)");
+        if (filePath.isEmpty())
+        {
+            return;
+        }
+
+        bool success = false;
+        QImage image;
+        if (image.load(imageFilePath))
+        {
+            if (image.save(filePath))
+            {
+                success = true;
+            }
+        }
+
+        if (success)
+        {
+            UiUtil::showTip(QString::fromWCharArray(L"保存图片成功"));
+        }
+        else
+        {
+            UiUtil::showTip(QString::fromWCharArray(L"保存图片失败"));
+        }
+    }
+}
+
 void HouseDialog::onOkButton()
 {
     if (m_type == BROWSE)
@@ -396,23 +453,7 @@ bool HouseDialog::eventFilter(QObject *obj, QEvent *event)
             QListWidgetItem *item = listWidget->itemAt(contextMenuEvent->pos());
             if (item)
             {
-                QMenu menu;
-                menu.addAction(QString::fromWCharArray(L"删除"));
-                QAction * action = menu.exec(cursor().pos());
-                if (action && action->text() == QString::fromWCharArray(L"删除"))
-                {
-                    if (UiUtil::showTipV2(QString::fromWCharArray(L"确定删除？")))
-                    {
-                        for (int i=0; i<listWidget->count(); i++)
-                        {
-                            if (listWidget->item(i) == item)
-                            {
-                                delete listWidget->takeItem(i);
-                                break;
-                            }
-                        }
-                    }
-                }
+                onImageItemRightClick(item);
             }
         }
     }
@@ -422,29 +463,34 @@ bool HouseDialog::eventFilter(QObject *obj, QEvent *event)
 
 void HouseDialog::onAddImageButton(QListWidget* listWidget)
 {
-    QFileDialog fileDialog;
-    fileDialog.setWindowTitle(QString::fromWCharArray(L"选择图片"));
-    fileDialog.setNameFilters(QStringList() << "Images (*.png *.jpg *.jpeg *.bmp)");
-    if (fileDialog.exec() != QDialog::Accepted)
+    QStringList filePaths = QFileDialog::getOpenFileNames(this, QString::fromWCharArray(L"选择图片"),
+                                                          "", "Images (*.png *.jpg *.jpeg *.bmp)");
+    if (filePaths.empty())
     {
         return;
     }
 
-    QString imageFilePath = fileDialog.selectedFiles()[0];
+    QVector<QString> imageFilePaths;
+    for (auto& imageFilePath : filePaths)
+    {
+        imageFilePaths.append(imageFilePath);
+    }
     UploadImageController* controller = new UploadImageController(this);
-    connect(controller, &UploadImageController::runFinish, [this, listWidget, controller, imageFilePath]() {
-        if (controller->m_imageId.isEmpty())
+    connect(controller, &UploadImageController::uploadImageCompletely, [this, listWidget](QString imageFilePath, QString imageId) {
+        QString imageDestFilePath = PathUtil::getImageFilePath(imageId);
+        ::CopyFile(imageFilePath.toStdWString().c_str(), imageDestFilePath.toStdWString().c_str(), TRUE);
+        addImageCtrlItem(listWidget, imageId, -1);
+    });
+    connect(controller, &UploadImageController::runFinish, [controller]() {
+        if (!controller->m_success)
         {
             UiUtil::showTip(QString::fromWCharArray(L"上传图片失败"));
             return;
         }
 
-        QString imageDestFilePath = PathUtil::getImageFilePath(controller->m_imageId);
-        ::CopyFile(imageFilePath.toStdWString().c_str(), imageDestFilePath.toStdWString().c_str(), TRUE);
-
-        addImageCtrlItem(listWidget, controller->m_imageId, -1);
+        controller->deleteLater();
     });
-    controller->run(this, imageFilePath);
+    controller->run(this, imageFilePaths);
 }
 
 void HouseDialog::downloadImages()

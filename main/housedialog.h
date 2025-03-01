@@ -49,6 +49,8 @@ private slots:
 
     void onImageItemClick(QListWidgetItem *item);
 
+    void onImageItemRightClick(QListWidgetItem *item);
+
 protected:
     bool eventFilter(QObject *obj, QEvent *event) override;
 

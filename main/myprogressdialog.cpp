@@ -14,9 +14,9 @@ MyProgressDialog::MyProgressDialog(const QString &labelText, const QString &canc
     setAutoReset(false);
 }
 
-void MyProgressDialog::setSuccess()
+void MyProgressDialog::setFinish()
 {
-    m_success = true;
+    m_finish = true;
 }
 
 void MyProgressDialog::showTip(QString tip)

@@ -31,6 +31,7 @@ void DownloadImageController::doDownloadImage()
     }
 
     HouseHttpClient* client = new HouseHttpClient(this);
+    client->setTransferTimeout(20000);
     QString imageId = m_imageIds[m_currentDownloadIndex];
     connect(client, &HouseHttpClient::getImageCompletely, [this, client, imageId](bool success) {
         bool downloadNextImage = true;

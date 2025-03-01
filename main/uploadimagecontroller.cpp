@@ -2,16 +2,26 @@
 #include <QTimer>
 #include "househttpclient.h"
 
+// 每张图片上传最大秒数
+#define MAX_SECONDS_PER_IMAGE  20000
+
 UploadImageController::UploadImageController(QObject *parent)
     : QObject{parent}
 {
 
 }
 
-void UploadImageController::run(QWidget* parent, const QString& imageFilePath)
+void UploadImageController::run(QWidget* parent, const QVector<QString>& imageFilePaths)
 {
+    m_imageFilePaths = imageFilePaths;
+    if (m_imageFilePaths.empty())
+    {
+        emit runFinish();
+        return;
+    }
+
     // 显示进度条
-    m_progressDlg = new MyProgressDialog(QString(), QString(), 0, 30, parent);
+    m_progressDlg = new MyProgressDialog(QString(), QString(), 0, m_imageFilePaths.size(), parent);
     m_progressDlg->setAutoReset(false);
     m_progressDlg->setAttribute(Qt::WA_DeleteOnClose);
     m_progressDlg->setWindowTitle(QString::fromWCharArray(L"提示"));
@@ -26,11 +36,11 @@ void UploadImageController::run(QWidget* parent, const QString& imageFilePath)
             return;
         }
 
-        int value = m_progressDlg->value();
-        if (m_progressDlg->isSuccess())
+        m_tickCount++;
+        if (m_progressDlg->isFinish())
         {
-            // 至少显示2秒再关闭
-            if (value >= 1)
+            // 至少显示1秒再关闭
+            if (m_tickCount >= 1)
             {
                 m_progressDlg->setCanClose();
                 m_progressDlg->close();
@@ -40,38 +50,50 @@ void UploadImageController::run(QWidget* parent, const QString& imageFilePath)
                 return;
             }
         }
-        else
-        {
-            if (value >= m_progressDlg->maximum())
-            {
-
-                m_progressDlg->setCanClose();
-                m_progressDlg->close();
-                m_progressDlg = nullptr;
-
-                emit runFinish();
-                return;
-            }
-        }
-        m_progressDlg->setValue(value+1);
     });
     progressTimer->start(1000);
 
     // 上传图片
-    HouseHttpClient* client = new HouseHttpClient(this);
-    connect(client, &HouseHttpClient::addImageCompletely,
-            [this, client](bool success, QString imageId) {
+    doUploadImage();
+}
+
+void UploadImageController::doUploadImage()
+{
+    if (m_currentUploadIndex >= m_imageFilePaths.size())
+    {
         if (m_progressDlg)
         {
-            m_progressDlg->setSuccess();
+            m_progressDlg->setFinish();
         }
+        m_success = true;
+        return;
+    }
 
+    HouseHttpClient* client = new HouseHttpClient(this);
+    client->setTransferTimeout(MAX_SECONDS_PER_IMAGE);
+    connect(client, &HouseHttpClient::addImageCompletely,
+            [this, client](bool success, QString imageId) {
         if (success)
         {
-            m_imageId = imageId;
+            if (m_progressDlg)
+            {
+                m_progressDlg->setValue(m_currentUploadIndex+1);
+            }
+            emit uploadImageCompletely(m_imageFilePaths[m_currentUploadIndex], imageId);
+
+            m_currentUploadIndex++;
+            doUploadImage();
+        }
+        else
+        {
+            if (m_progressDlg)
+            {
+                m_progressDlg->setFinish();
+            }
+            m_success = false;
         }
 
         client->deleteLater();
     });
-    client->addImage(imageFilePath);
+    client->addImage(m_imageFilePaths[m_currentUploadIndex]);
 }
