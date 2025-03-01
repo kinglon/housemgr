@@ -19,7 +19,7 @@ HouseDialog::HouseDialog(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint);
+    setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint | Qt::WindowMinimizeButtonHint);
     setWindowModality(Qt::WindowModal);
     setWindowFlags(windowFlags() & ~Qt::WindowMaximizeButtonHint);
     setWindowFlag(Qt::MSWindowsFixedSizeDialogHint, true);

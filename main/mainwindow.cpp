@@ -12,8 +12,7 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
 
-    setWindowFlags(windowFlags() & ~Qt::WindowMaximizeButtonHint);
-    setWindowFlag(Qt::MSWindowsFixedSizeDialogHint, true);
+    setWindowFlags(windowFlags() | Qt::WindowMaximizeButtonHint);
 
     initCtrls();
 
@@ -27,10 +26,7 @@ MainWindow::~MainWindow()
 }
 
 void MainWindow::initCtrls()
-{
-    ui->jiaoYiBeginDate->setDate(QDate::currentDate().addYears(-1));
-    ui->jiaoYiEndDate->setDate(QDate::currentDate());
-
+{    
     initHouseTableView();
 
     connect(ui->addButton, &QPushButton::clicked, this, &MainWindow::onAddButton);
@@ -202,27 +198,11 @@ void MainWindow::doSearch(const SearchCondition& searchCondition)
 void MainWindow::onSearchButton()
 {
     SearchCondition searchCondition;
-    searchCondition.m_enableJiaoYiDate = ui->jiaoYiDateCheckBox->isChecked();
-    if (searchCondition.m_enableJiaoYiDate)
-    {
-        searchCondition.m_searchJiaoYiBeginDate = ui->jiaoYiBeginDate->date();
-        searchCondition.m_searchJiaoYiEndDate = ui->jiaoYiEndDate->date();
-        if (searchCondition.m_searchJiaoYiBeginDate >= searchCondition.m_searchJiaoYiEndDate)
-        {
-            UiUtil::showTip(QString::fromWCharArray(L"请正确设置交易日期"));
-            return;
-        }
-    }
 
     searchCondition.m_searchCondition.m_name = ui->houseNameEdit->text();
-    searchCondition.m_searchCondition.m_jiaoShuiName = ui->jiaoShuiEdit->text();
-    searchCondition.m_searchCondition.m_zhongjieName = ui->zhongJieEdit->text();
+    // 姓名和身份证只有一个输入，放在买家
     searchCondition.m_searchCondition.m_buyer.m_name = ui->buyerName->text();
-    searchCondition.m_searchCondition.m_buyer.m_phoneNumber = ui->buyerPhoneEdit->text();
     searchCondition.m_searchCondition.m_buyer.m_id = ui->buyerIdEdit->text();
-    searchCondition.m_searchCondition.m_seller.m_name = ui->sellerNameEdit->text();
-    searchCondition.m_searchCondition.m_seller.m_phoneNumber = ui->sellerPhoneEdit->text();
-    searchCondition.m_searchCondition.m_seller.m_id = ui->sellerIdEdit->text();
 
     doSearch(searchCondition);
 }
