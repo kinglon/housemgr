@@ -66,5 +66,14 @@ class House(models.Model):
     # 卖方结婚证图片，图片ID数组
     seller_marriage_images = models.CharField(max_length=1000)
 
+    # 承办人
+    chengban_name = models.CharField(max_length=20, db_index=True, default='')
+
+    # 网签合同
+    wangqianhetong_images = models.CharField(max_length=1000, default='')
+
+    # 备注
+    remark = models.CharField(max_length=1000, default='')
+
     class Meta:
         db_table = "house"

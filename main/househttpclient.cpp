@@ -357,7 +357,7 @@ bool HouseHttpClient::getDataObject(QNetworkReply *reply, QJsonObject& dataObj)
 
 QString HouseHttpClient::getQueryHouseParam(const SearchCondition& condition)
 {
-    const House& house = condition.m_searchCondition;
+    const House& house = condition.m_searchCondition;    
     QMap<QString, QString> queryParams;
     if (house.m_houseId >= 0)
     {
@@ -423,6 +423,7 @@ bool HouseHttpClient::parseQueryHouseData(const QJsonObject& data, SearchResult&
         house.m_jiaoShuiName = houseObj["jiaoshui_name"].toString();
         house.m_fee = houseObj["fee"].toString();
         house.m_zhongjieName = houseObj["zhongjie_name"].toString();
+        house.m_chengbanName = houseObj["chengban_name"].toString();
         house.m_jiaoYiDate = QDateTime::fromSecsSinceEpoch(houseObj["jiaoyi_at"].toInt()).date();
 
         QJsonArray images = houseObj["fangchanzheng_images"].toArray();
@@ -441,6 +442,12 @@ bool HouseHttpClient::parseQueryHouseData(const QJsonObject& data, SearchResult&
         for (int i=0; i<images.size(); i++)
         {
             house.m_tongZhiShuImages.append(images[i].toString());
+        }
+
+        images = houseObj["wangqianhetong_images"].toArray();
+        for (int i=0; i<images.size(); i++)
+        {
+            house.m_heTongImages.append(images[i].toString());
         }
 
         house.m_buyer.m_name = houseObj["buyer_name"].toString();
@@ -487,6 +494,8 @@ bool HouseHttpClient::parseQueryHouseData(const QJsonObject& data, SearchResult&
             house.m_seller.m_marriageImages.append(images[i].toString());
         }
 
+        house.m_remark = houseObj["remark"].toString();
+
         result.m_houses.append(house);
     }
 
@@ -500,6 +509,7 @@ QJsonObject HouseHttpClient::getHouseBody(const House& house)
     body["jiaoshui_name"] = house.m_jiaoShuiName;
     body["fee"] = house.m_fee;
     body["zhongjie_name"] = house.m_zhongjieName;
+    body["chengban_name"] = house.m_chengbanName;
     QDateTime jiaoYiDate;
     jiaoYiDate.setDate(house.m_jiaoYiDate);
     body["jiaoyi_at"] = jiaoYiDate.toSecsSinceEpoch();
@@ -524,6 +534,13 @@ QJsonObject HouseHttpClient::getHouseBody(const House& house)
         tongZhiShuImages.append(image_id);
     }
     body["tongzhishu_images"] = tongZhiShuImages;
+
+    QJsonArray heTongImages;
+    for(const auto& image_id : house.m_heTongImages)
+    {
+        heTongImages.append(image_id);
+    }
+    body["wangqianhetong_images"] = heTongImages;
 
     body["buyer_name"] = house.m_buyer.m_name;
     body["buyer_phone_number"] = house.m_buyer.m_phoneNumber;
@@ -574,6 +591,8 @@ QJsonObject HouseHttpClient::getHouseBody(const House& house)
         sellerMarriageImages.append(image_id);
     }
     body["seller_marriage_images"] = sellerMarriageImages;
+
+    body["remark"] = house.m_remark;
 
     return body;
 }

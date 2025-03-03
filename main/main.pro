@@ -20,8 +20,10 @@ SOURCES += \
     househttpclient.cpp \
     httpclientbase.cpp \
     imagedialog.cpp \
+    loginwindow.cpp \
     main.cpp \
     mainwindow.cpp \
+    modifypassworddialog.cpp \
     myprogressdialog.cpp \
     pathutil.cpp \
     settingmanager.cpp \
@@ -42,7 +44,9 @@ HEADERS += \
     househttpclient.h \
     httpclientbase.h \
     imagedialog.h \
+    loginwindow.h \
     mainwindow.h \
+    modifypassworddialog.h \
     myprogressdialog.h \
     pathutil.h \
     settingmanager.h \
@@ -52,7 +56,9 @@ HEADERS += \
 FORMS += \
     housedialog.ui \
     imagedialog.ui \
-    mainwindow.ui
+    loginwindow.ui \
+    mainwindow.ui \
+    modifypassworddialog.ui
 
 # Enable PDB generation
 QMAKE_CFLAGS_RELEASE += /Zi
@@ -64,3 +70,5 @@ DEFINES += QT_MESSAGELOGCONTEXT
 
 RESOURCES += \
     resource.qrc
+
+RC_ICONS = res\logo.ico

@@ -47,6 +47,9 @@ public:
     // 中介人名字
     QString m_zhongjieName;
 
+    // 承办人名字
+    QString m_chengbanName;
+
     // 交易日期
     QDate m_jiaoYiDate;
 
@@ -59,11 +62,17 @@ public:
     // 受理通知书图片
     QVector<QString> m_tongZhiShuImages;
 
+    // 网签合同
+    QVector<QString> m_heTongImages;
+
     // 买方
     Person m_buyer;
 
     // 卖方
     Person m_seller;
+
+    // 备注
+    QString m_remark;
 
 public:
     bool isValid()

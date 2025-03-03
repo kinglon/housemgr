@@ -27,6 +27,7 @@ HouseDialog::HouseDialog(QWidget *parent) :
     m_imageListWidgets.append(ui->fangChanZhengListWidget);
     m_imageListWidgets.append(ui->shuiPiaoListWidget);
     m_imageListWidgets.append(ui->tongZhiShuListWidget);
+    m_imageListWidgets.append(ui->heTongListWidget);
     m_imageListWidgets.append(ui->buyerHuKouListWidget);
     m_imageListWidgets.append(ui->buyerIdListWidget);
     m_imageListWidgets.append(ui->buyerMarriageListWidget);
@@ -48,6 +49,7 @@ void HouseDialog::initCtrls()
     ui->houseNameEdit->setText("");
     ui->jiaoShuiEdit->setText("");
     ui->zhongJieEdit->setText("");
+    ui->chengBanEdit->setText("");
     ui->feeEdit->setText("");
     ui->buyerNameEdit->setText("");
     ui->buyerIdEdit->setText("");
@@ -56,6 +58,7 @@ void HouseDialog::initCtrls()
     ui->sellerPhoneEdit->setText("");
     ui->sellerIdEdit->setText("");
     ui->jiaoYiDate->setDate(QDate::currentDate());
+    ui->remarkEdit->setText("");
     for (auto& listWidget : m_imageListWidgets)
     {
         listWidget->clear();
@@ -66,6 +69,7 @@ void HouseDialog::initCtrls()
         ui->houseNameEdit->setText(m_house.m_name);
         ui->jiaoShuiEdit->setText(m_house.m_jiaoShuiName);
         ui->zhongJieEdit->setText(m_house.m_zhongjieName);
+        ui->chengBanEdit->setText(m_house.m_chengbanName);
         ui->feeEdit->setText(m_house.m_fee);
         ui->buyerNameEdit->setText(m_house.m_buyer.m_name);
         ui->buyerIdEdit->setText(m_house.m_buyer.m_id);
@@ -74,6 +78,7 @@ void HouseDialog::initCtrls()
         ui->sellerPhoneEdit->setText(m_house.m_seller.m_phoneNumber);
         ui->sellerIdEdit->setText(m_house.m_seller.m_id);
         ui->jiaoYiDate->setDate(m_house.m_jiaoYiDate);
+        ui->remarkEdit->setText(m_house.m_remark);
 
         for (const auto& imageId : m_house.m_fangChanZhengImages)
         {
@@ -88,6 +93,11 @@ void HouseDialog::initCtrls()
         for (const auto& imageId : m_house.m_tongZhiShuImages)
         {
             addImageCtrlItem(ui->tongZhiShuListWidget, imageId, -1);
+        }
+
+        for (const auto& imageId : m_house.m_heTongImages)
+        {
+            addImageCtrlItem(ui->heTongListWidget, imageId, -1);
         }
 
         for (const auto& imageId : m_house.m_buyer.m_hukouImages)
@@ -138,6 +148,7 @@ void HouseDialog::initCtrls()
     ui->addFangChanZhengButton->setEnabled(canEdit);
     ui->addShuiPiaoButton->setEnabled(canEdit);
     ui->addTongZhiShuButton->setEnabled(canEdit);
+    ui->addHeTongButton->setEnabled(canEdit);
     ui->addBuyerHuKouButton->setEnabled(canEdit);
     ui->addBuyerIdButton->setEnabled(canEdit);
     ui->addBuyerMarriageButton->setEnabled(canEdit);
@@ -164,6 +175,10 @@ void HouseDialog::initActions()
 
     connect(ui->addTongZhiShuButton, &QPushButton::clicked, [this]() {
         onAddImageButton(ui->tongZhiShuListWidget);
+    });
+
+    connect(ui->addHeTongButton, &QPushButton::clicked, [this]() {
+        onAddImageButton(ui->heTongListWidget);
     });
 
     connect(ui->addBuyerHuKouButton, &QPushButton::clicked, [this]() {
@@ -290,6 +305,7 @@ void HouseDialog::onOkButton()
     house.m_name = ui->houseNameEdit->text();
     house.m_jiaoShuiName = ui->jiaoShuiEdit->text();
     house.m_zhongjieName = ui->zhongJieEdit->text();
+    house.m_chengbanName = ui->chengBanEdit->text();
     house.m_fee = ui->feeEdit->text();
     house.m_jiaoYiDate = ui->jiaoYiDate->date();
     house.m_buyer.m_name = ui->buyerNameEdit->text();
@@ -298,6 +314,7 @@ void HouseDialog::onOkButton()
     house.m_seller.m_name = ui->sellerNameEdit->text();
     house.m_seller.m_id = ui->sellerIdEdit->text();
     house.m_seller.m_phoneNumber = ui->sellerPhoneEdit->text();
+    house.m_remark = ui->remarkEdit->text();
 
     for (int i=0; i<ui->fangChanZhengListWidget->count(); i++)
     {
@@ -315,6 +332,12 @@ void HouseDialog::onOkButton()
     {
         QString imageId = ui->tongZhiShuListWidget->item(i)->data(Qt::UserRole).toString();
         house.m_tongZhiShuImages.append(imageId);
+    }
+
+    for (int i=0; i<ui->heTongListWidget->count(); i++)
+    {
+        QString imageId = ui->heTongListWidget->item(i)->data(Qt::UserRole).toString();
+        house.m_heTongImages.append(imageId);
     }
 
     for (int i=0; i<ui->buyerHuKouListWidget->count(); i++)
@@ -499,6 +522,7 @@ void HouseDialog::downloadImages()
     imageIds.append(m_house.m_fangChanZhengImages);
     imageIds.append(m_house.m_shuiPiaoImages);
     imageIds.append(m_house.m_tongZhiShuImages);
+    imageIds.append(m_house.m_heTongImages);
     imageIds.append(m_house.m_buyer.m_hukouImages);
     imageIds.append(m_house.m_buyer.m_idImages);
     imageIds.append(m_house.m_buyer.m_marriageImages);

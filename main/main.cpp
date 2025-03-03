@@ -1,10 +1,12 @@
 ﻿#include "mainwindow.h"
 
 #include <QApplication>
+#include <QTranslator>
 #include "Utility/LogUtil.h"
 #include "Utility/DumpUtil.h"
 #include "Utility/ImPath.h"
 #include "settingmanager.h"
+#include "loginwindow.h"
 
 CLogUtil* g_dllLog = nullptr;
 
@@ -57,8 +59,19 @@ int main(int argc, char *argv[])
     originalHandler = qInstallMessageHandler(logToFile);
 
     qputenv("QT_FONT_DPI", "100");
+
+    QTranslator translator;
+    translator.load(":/res/qt_zh_CN.qm");
+
     QApplication a(argc, argv);
-    MainWindow w;
-    w.show();
+    a.installTranslator(&translator);
+
+    LoginWindow loginWindow;
+    loginWindow.connect(&loginWindow, &LoginWindow::loginSuccess, [](){
+        MainWindow* mainWindow = new MainWindow();
+        mainWindow->show();
+    });
+    loginWindow.show();
+
     return a.exec();
 }

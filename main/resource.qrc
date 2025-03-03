@@ -1,5 +1,6 @@
 <RCC>
     <qresource prefix="/">
         <file>res/images/loading.png</file>
+        <file>res/qt_zh_CN.qm</file>
     </qresource>
 </RCC>

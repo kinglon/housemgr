@@ -13,6 +13,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
 
     setWindowFlags(windowFlags() | Qt::WindowMaximizeButtonHint);
+    // setWindowFlag(Qt::MSWindowsFixedSizeDialogHint, true);
 
     initCtrls();
 
@@ -41,21 +42,26 @@ void MainWindow::initHouseTableView()
     ui->houseTableView->setModel(&m_houseViewModel);
 
     m_houseViewModel.clear();
-    m_houseViewModel.setColumnCount(11);
-    m_houseViewModel.setHeaderData(0, Qt::Horizontal, QString::fromWCharArray(L"房子名称"));
-    ui->houseTableView->setColumnWidth(0, 200);
-    m_houseViewModel.setHeaderData(1, Qt::Horizontal, QString::fromWCharArray(L"缴税人"));
-    m_houseViewModel.setHeaderData(2, Qt::Horizontal, QString::fromWCharArray(L"中介人"));
-    m_houseViewModel.setHeaderData(3, Qt::Horizontal, QString::fromWCharArray(L"交易日期"));
-    m_houseViewModel.setHeaderData(4, Qt::Horizontal, QString::fromWCharArray(L"费用"));
-    m_houseViewModel.setHeaderData(5, Qt::Horizontal, QString::fromWCharArray(L"买方姓名"));
-    m_houseViewModel.setHeaderData(6, Qt::Horizontal, QString::fromWCharArray(L"买方电话"));
-    m_houseViewModel.setHeaderData(7, Qt::Horizontal, QString::fromWCharArray(L"买方身份证"));
-    ui->houseTableView->setColumnWidth(7, 200);
-    m_houseViewModel.setHeaderData(8, Qt::Horizontal, QString::fromWCharArray(L"卖方姓名"));
-    m_houseViewModel.setHeaderData(9, Qt::Horizontal, QString::fromWCharArray(L"卖方电话"));
-    m_houseViewModel.setHeaderData(10, Qt::Horizontal, QString::fromWCharArray(L"卖方身份证"));
-    ui->houseTableView->setColumnWidth(10, 200);
+    m_houseViewModel.setColumnCount(12);
+    int column = 0;
+    m_houseViewModel.setHeaderData(column, Qt::Horizontal, QString::fromWCharArray(L"房子名称"));
+    ui->houseTableView->setColumnWidth(column, 200);
+    column++;
+    m_houseViewModel.setHeaderData(column++, Qt::Horizontal, QString::fromWCharArray(L"缴税人"));
+    m_houseViewModel.setHeaderData(column++, Qt::Horizontal, QString::fromWCharArray(L"中介人"));
+    m_houseViewModel.setHeaderData(column++, Qt::Horizontal, QString::fromWCharArray(L"承办人"));
+    m_houseViewModel.setHeaderData(column++, Qt::Horizontal, QString::fromWCharArray(L"交易日期"));
+    m_houseViewModel.setHeaderData(column++, Qt::Horizontal, QString::fromWCharArray(L"费用"));
+    m_houseViewModel.setHeaderData(column++, Qt::Horizontal, QString::fromWCharArray(L"买方姓名"));
+    m_houseViewModel.setHeaderData(column++, Qt::Horizontal, QString::fromWCharArray(L"买方电话"));
+    m_houseViewModel.setHeaderData(column, Qt::Horizontal, QString::fromWCharArray(L"买方身份证"));
+    ui->houseTableView->setColumnWidth(column, 200);
+    column++;
+    m_houseViewModel.setHeaderData(column++, Qt::Horizontal, QString::fromWCharArray(L"卖方姓名"));
+    m_houseViewModel.setHeaderData(column++, Qt::Horizontal, QString::fromWCharArray(L"卖方电话"));
+    m_houseViewModel.setHeaderData(column, Qt::Horizontal, QString::fromWCharArray(L"卖方身份证"));
+    ui->houseTableView->setColumnWidth(column, 200);
+    column++;
 
     updateHouseTableView();
 }
@@ -66,49 +72,54 @@ void MainWindow::updateHouseTableView()
     for (int row=0; row<m_searchResult.m_houses.size(); row++)
     {
         const House& house = m_searchResult.m_houses[row];
+        int column = 0;
         QStandardItem* item = new QStandardItem(house.m_name);
         item->setTextAlignment(Qt::AlignCenter);
-        m_houseViewModel.setItem(row, 0, item);
+        m_houseViewModel.setItem(row, column++, item);
 
         item = new QStandardItem(house.m_jiaoShuiName);
         item->setTextAlignment(Qt::AlignCenter);
-        m_houseViewModel.setItem(row, 1, item);
+        m_houseViewModel.setItem(row, column++, item);
 
         item = new QStandardItem(house.m_zhongjieName);
         item->setTextAlignment(Qt::AlignCenter);
-        m_houseViewModel.setItem(row, 2, item);
+        m_houseViewModel.setItem(row, column++, item);
+
+        item = new QStandardItem(house.m_chengbanName);
+        item->setTextAlignment(Qt::AlignCenter);
+        m_houseViewModel.setItem(row, column++, item);
 
         item = new QStandardItem(house.m_jiaoYiDate.toString("yyyy-M-d"));
         item->setTextAlignment(Qt::AlignCenter);
-        m_houseViewModel.setItem(row, 3, item);
+        m_houseViewModel.setItem(row, column++, item);
 
         item = new QStandardItem(house.m_fee);
         item->setTextAlignment(Qt::AlignCenter);
-        m_houseViewModel.setItem(row, 4, item);
+        m_houseViewModel.setItem(row, column++, item);
 
         item = new QStandardItem(house.m_buyer.m_name);
         item->setTextAlignment(Qt::AlignCenter);
-        m_houseViewModel.setItem(row, 5, item);
+        m_houseViewModel.setItem(row, column++, item);
 
         item = new QStandardItem(house.m_buyer.m_phoneNumber);
         item->setTextAlignment(Qt::AlignCenter);
-        m_houseViewModel.setItem(row, 6, item);
+        m_houseViewModel.setItem(row, column++, item);
 
         item = new QStandardItem(house.m_buyer.m_id);
         item->setTextAlignment(Qt::AlignCenter);
-        m_houseViewModel.setItem(row, 7, item);
+        m_houseViewModel.setItem(row, column++, item);
 
         item = new QStandardItem(house.m_seller.m_name);
         item->setTextAlignment(Qt::AlignCenter);
-        m_houseViewModel.setItem(row, 8, item);
+        m_houseViewModel.setItem(row, column++, item);
 
         item = new QStandardItem(house.m_seller.m_phoneNumber);
         item->setTextAlignment(Qt::AlignCenter);
-        m_houseViewModel.setItem(row, 9, item);
+        m_houseViewModel.setItem(row, column++, item);
 
         item = new QStandardItem(house.m_seller.m_id);
         item->setTextAlignment(Qt::AlignCenter);
-        m_houseViewModel.setItem(row, 10, item);
+        m_houseViewModel.setItem(row, column++, item);
 
         m_houseViewModel.setData(m_houseViewModel.index(row, 0), house.m_houseId, Qt::UserRole);
     }
